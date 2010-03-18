@@ -1,0 +1,47 @@
+# Configure the community we are part of.
+
+# Copy this file n2n.config-example to n2n.config; and
+# then edit the next five lines.   It doesn't really matter
+# what you name your community, and a nice long password is
+# fine, since you won't be typing it.   You need to run a
+# supernode ip address and port that exposed on the public
+# internet.  You don't need to change N2N_NET, but
+# if you do it should be in the private IP address space.
+# Finally, if you are going to have a gateway from your
+# VPN out to the rest of the internet, note that gateway's
+# address, in the VPN address space, in N2N_GATEWAY.
+
+N2N_COMMUNITY=my_community
+N2N_PASSWORD=my_community_password
+N2N_SUPERNODE=123.45.67.8:1234
+
+N2N_NET=192.168.5
+N2N_GATEWAY="$N2N_NET.1"
+
+### You probably do not need to mess with the rest of this...
+
+# Make a fake mac from this machine's first mac addr;
+#    10-00-00 is a private MAC space
+N2N_FAKE_MAC=`ifconfig -a | awk '/ether/{print $2}' | head -1 | sed 's/^..:..:../10:00:00/'`
+
+N2N_ROUTE_SNAPSHOT_FILE=/tmp/n2n_route_snapshot_file
+
+edge_pid () {
+  ps -afx | grep ' [e]dge -v -c' | awk '{print $2}'
+}
+
+edge_is_running () {
+  ps -afx | grep --silent ' [e]dge -v -c'
+}
+
+ping_ok() {
+   ping -c 1 -t 4 $1 > /dev/null
+}
+
+ping_gateway () {
+  ping_ok $N2N_GATEWAY
+}
+
+default_route () {
+  netstat -rn | awk '/default/{print $2}'
+}

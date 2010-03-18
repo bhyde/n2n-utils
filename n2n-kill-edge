@@ -1,0 +1,6 @@
+#!/bin/bash
+. `dirname $0`/n2n.config
+
+if edge_is_running ;
+then echo "Killing edge process (`edge_pid`)." ; sudo kill `edge_pid`
+else echo 'Edge is not running' ; fi

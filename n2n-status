@@ -1,0 +1,28 @@
+#!/bin/bash
+. `dirname $0`/n2n.config
+
+echo community: $N2N_COMMUNITY
+echo password: $N2N_PASSWORD
+echo supernode: $N2N_SUPERNODE
+echo private net: $N2N_NET
+echo gateway: $N2N_GATEWAY
+echo my fake MAC: $N2N_FAKE_MAC
+echo default route snap: $N2N_ROUTE_SNAPSHOT_FILE
+
+if edge_is_running ;
+then echo "edge process (`edge_pid`) is running" 
+else echo "edge process is not running"; exit 1 ; fi
+
+if ping_gateway ;
+then echo "we can ping the gateway" \
+else echo "we can not ping the gateway" ; exit 1 ; fi
+
+echo -n "default routing for packets is via `default_route`"
+if [ `default_route` == $N2N_GATEWAY ] ;
+then echo ", i.e. the n2n gateway" \
+else echo ", i.e. not the n2n gateway" ; fi
+
+if ping_ok 88.88.88.88 ; 
+then echo "Can see internet." 
+else echo "Cannot see internet." ; exit 1 ; fi
+

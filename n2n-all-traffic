@@ -1,0 +1,27 @@
+#!/bin/bash
+. `dirname $0`/n2n.config
+if ping_gateway ; then 
+  echo "N2N gateway is reachable."
+else
+  echo "N2N gateway is unreachable, try joining n2n"
+  ~/bin/join_n2n
+fi
+
+if ping_gateway ; then 
+  echo -n
+else
+  echo "Sorry: N2N gateway is still unreachable."
+  exit 1
+fi
+
+DEFAULT=`default_route`
+
+if [ "x$DEFAULT" == 'x$N2N_GATEWAY' ] ; then
+   echo "Default route is already $DEFAULT"
+else
+   echo "saving current default route, i.e. '$DEFAULT' to '$N2N_ROUTE_SNAPSHOT_FILE'"
+   echo $DEFAULT > "$N2N_ROUTE_SNAPSHOT_FILE"
+   sudo route change default $N2N_GATEWAY
+   sleep 1
+   ping_ok 88.88.88.88 && echo ok || echo 'ERROR: ping test failed'
+fi

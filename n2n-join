@@ -1,0 +1,28 @@
+#!/bin/bash
+. `dirname $0`/n2n.config
+
+if edge_is_running ; then
+  if [ "x$1" == 'x-r' ] ; then
+    echo 'Killing edge process'
+    sudo kill `edge_pid`
+  fi
+fi
+
+if edge_is_running ; then
+  echo "Our edge process (`edge_pid`) for $N2N_COMMUNITY's n2n is running."
+else
+  echo "Starting edge in the n2n of $N2N_COMMUNITY."
+  sudo edge -v -c $N2N_COMMUNITY -k $N2N_PASSWORD -l $N2N_SUPERNODE -m $N2N_FAKE_MAC -a $N2N_NET.2 -r
+fi
+
+echo -n waiting
+for i in a b c d e f ; do
+  ping_gateway && break
+  sleep 1
+  echo ' .'
+done
+
+if ping_gateway ; 
+then echo ''; echo ok
+else echo "Sorry, can't ping the other gateway" ; exit 1; fi
+
