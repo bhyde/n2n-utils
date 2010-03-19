@@ -5,7 +5,7 @@ OLD=`default_route`
 echo "Default route for packets is currently '$OLD'"
 if [ -e "$N2N_ROUTE_SNAPSHOT_FILE" ] ; then
   NEW=`cat "$N2N_ROUTE_SNAPSHOT_FILE"`
-  echo "Setting default route from $OLD to $NEW"
+  echo "changing default route from $OLD to $NEW"
   sudo route change default $NEW
 else
   echo "ERROR: can not reset, no saved route."
