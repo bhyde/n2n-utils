@@ -1,2 +1,0 @@
-#!/bin/bash
-echo x | ncat --idle-timeout 1s --udp localhost 564
