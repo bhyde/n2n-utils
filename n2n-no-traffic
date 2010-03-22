@@ -7,6 +7,7 @@ if [ -e "$N2N_ROUTE_SNAPSHOT_FILE" ] ; then
   NEW=`cat "$N2N_ROUTE_SNAPSHOT_FILE"`
   echo "changing default route from $OLD to $NEW"
   sudo route change default $NEW
+  sudo route delete $N2N_SUPERNODE_IP
 else
   echo "ERROR: can not reset, no saved route."
 fi

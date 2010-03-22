@@ -12,26 +12,33 @@
 # address, in the VPN address space, in N2N_GATEWAY.
 
 N2N_COMMUNITY=my_community
-N2N_PASSWORD=my_community_password
-N2N_SUPERNODE=123.45.67.8:1234
-
+N2N_PASSWORD=my_communit_password
+N2N_SUPERNODE_IP=123.45.67.8
+N2N_SUPERNODE_PORT=1234
 N2N_NET=192.168.5
 N2N_GATEWAY="$N2N_NET.1"
 
+
 ### You probably do not need to mess with the rest of this...
+
+N2N_SUPERNODE=${N2N_SUPERNODE_IP}:$N2N_SUPERNODE_PORT
 
 # Make a fake mac from this machine's first mac addr;
 #    10-00-00 is a private MAC space
 N2N_FAKE_MAC=`ifconfig -a | awk '/ether/{print $2}' | head -1 | sed 's/^..:..:../10:00:00/'`
+# N2N_FAKE_MAC= xx:xx:xx:xx:xx:xx
+
+# Others public IP: 8.8.8.8 208.67.222.222
+PUBLIC_IP_FOR_PING=4.2.2.4
 
 N2N_ROUTE_SNAPSHOT_FILE=/tmp/n2n_route_snapshot_file
 
 edge_pid () {
-  ps -afx | grep ' [e]dge -v -c' | awk '{print $2}'
+  ps -afx | grep '[e]dge ' | awk '{print $2}'
 }
 
 edge_is_running () {
-  ps -afx | grep --silent ' [e]dge -v -c'
+  ps -afx | grep --silent '[e]dge '
 }
 
 ping_ok() {
@@ -43,5 +50,15 @@ ping_gateway () {
 }
 
 default_route () {
-  netstat -rn | awk '/default/{print $2}'
+  route -n get default | awk '/gateway/{print $2}'
+  # netstat -rn | awk '/default/{print $2}'
+}
+
+patient_ping_gateway () {
+  for i in a b c d e f ; do
+    ping_gateway && return 0
+    sleep 1
+    echo -n '.'
+  done
+  return 0
 }

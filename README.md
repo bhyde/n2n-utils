@@ -4,8 +4,7 @@ A few bash scripts for managing a n2n based VPN.
 
 ## Introduction
 
-Some scripts I used to manage a n2n based VPN, mostly on the macintosh.
+I run n2n for a community of Macintoshes.  These are the scripts I'm using.  They aren't quite right yet, but they may provide some helpful insights.
 
-Each machine installs these scripts along with the file n2n.config; which
-is derived from n2n.config-example.
+Note that you have to set up n2n.config, basing it on n2n.config-example
 

@@ -12,14 +12,15 @@ if edge_is_running ; then
   echo "Our edge process (`edge_pid`) for $N2N_COMMUNITY's n2n is running."
 else
   echo "Starting edge in the n2n of $N2N_COMMUNITY."
-  sudo edge -v -c $N2N_COMMUNITY -k $N2N_PASSWORD -l $N2N_SUPERNODE -m $N2N_FAKE_MAC -a $N2N_NET.2 -r
+  sudo edge -c $N2N_COMMUNITY -k $N2N_PASSWORD -l $N2N_SUPERNODE -a $N2N_NET.2 -r
+#-m $N2N_FAKE_MAC
 fi
 
 echo -n waiting
 for i in a b c d e f ; do
   ping_gateway && break
   sleep 1
-  echo ' .'
+  echo -n '.'
 done
 
 if ping_gateway ; 

@@ -1,28 +1,38 @@
 #!/bin/bash
-. `dirname $0`/n2n.config
+H=`dirname $0`
+. $H/n2n.config
 
-echo community: $N2N_COMMUNITY
-echo password: $N2N_PASSWORD
-echo supernode: $N2N_SUPERNODE
-echo private net: $N2N_NET
-echo gateway: $N2N_GATEWAY
-echo my fake MAC: $N2N_FAKE_MAC
-echo default route snap: $N2N_ROUTE_SNAPSHOT_FILE
+cat <<EOF
+Various settings from: $H/n2n.config
+  community: $N2N_COMMUNITY
+  password: $N2N_PASSWORD
+  supernode: $N2N_SUPERNODE
+  private net: $N2N_NET
+  gateway: $N2N_GATEWAY
+  my fake MAC: $N2N_FAKE_MAC
+  default route snap: $N2N_ROUTE_SNAPSHOT_FILE
+
+Status of the edge node, assuming it's running.
+`$H/n2n-manage | sed 's/^/  /'`
+
+Other status:
+EOF
 
 if edge_is_running ;
-then echo "edge process (`edge_pid`) is running" 
-else echo "edge process is not running"; exit 1 ; fi
+then echo "  edge process (`edge_pid`) is running" 
+else echo "  edge process is not running"; exit 1 ; fi
 
-if ping_gateway ;
-then echo "we can ping the gateway" 
-else echo "we can not ping the gateway" ; exit 1 ; fi
+echo -n 'gateway ping..'
+if patient_ping_gateway ;
+then echo "  we can ping the gateway" 
+else echo "  we can not ping the gateway" ; exit 1 ; fi
 
-echo -n "default routing for packets is via `default_route`"
+echo -n "  default routing for packets is via `default_route`"
 if [ `default_route` == $N2N_GATEWAY ] ;
 then echo ", the n2n gateway"
 else echo ", not the n2n gateway" ; fi
 
-if ping_ok 88.88.88.88 ; 
-then echo "we can see internet." 
-else echo "we cannot see internet." ; exit 1 ; fi
+if ping_ok $PUBLIC_IP_FOR_PING ; 
+then echo "  we can see internet." 
+else echo "  we cannot see internet." ; exit 1 ; fi
 
