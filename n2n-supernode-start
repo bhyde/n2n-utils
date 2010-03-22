@@ -1,0 +1,22 @@
+#!/bin/bash
+. `dirname $0`/n2n.config
+
+# The following check is partial since other machines
+# behind the same nat will pass.
+
+EXTERNAL_IP="`curl -s http://cfaj.freeshell.org/ipaddr.cgi`"
+
+if [ "x$EXTERNAL_IP" != "x$N2N_SUPERNODE_IP" ] ; then
+   echo "ERROR: The configured supernode IP doesn't match this machine's external IP"
+   echo "Config: $N2N_SUPERNODE_IP, actual: $EXTERNAL_IP"
+   exit 1
+fi
+
+echo "x: $EXTERNAL_IP c: $N2N_SUPERNODE_IP"
+
+if ps -afx | grep --silent '[s]upernode -l' ; then 
+  echo "supernode already running"
+else
+  echo "starting supernode"
+  sudo supernode -l $N2N_SUPERNODE_PORT
+fi

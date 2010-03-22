@@ -40,3 +40,6 @@ n2n-all-traffic
 
 n2n-no-traffic
   Undoes the routing rules setup by n2n-all-traffic.
+
+n2n-supernode-start
+  Starts up a supernode.
