@@ -12,11 +12,9 @@ if [ "x$EXTERNAL_IP" != "x$N2N_SUPERNODE_IP" ] ; then
    exit 1
 fi
 
-echo "x: $EXTERNAL_IP c: $N2N_SUPERNODE_IP"
-
 if ps -afx | grep --silent '[s]upernode -l' ; then 
   echo "supernode already running"
 else
-  echo "starting supernode"
+  echo "starting supernode on port $N2N_SUPERNODE_PORT"
   sudo supernode -l $N2N_SUPERNODE_PORT
 fi
