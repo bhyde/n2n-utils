@@ -15,7 +15,9 @@ if edge_is_running ; then
 else
   echo "Starting edge in the n2n of $N2N_COMMUNITY (supernode: $N2N_SUPERNODE)"
   sudo -p 'I need sudo privs to start the edge.
-Password: ' edge -c $N2N_COMMUNITY -k $N2N_PASSWORD -l $N2N_SUPERNODE -a $N2N_NET.$N2N_ME -r
+Password: ' \
+    env N2N_KEY=$N2N_PASSWORD \
+    edge -c $N2N_COMMUNITY -l $N2N_SUPERNODE -a $N2N_NET.$N2N_ME -r
 #-m $N2N_FAKE_MAC
 fi
 
