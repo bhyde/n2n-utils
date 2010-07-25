@@ -2,6 +2,8 @@
 H=`dirname $0`
 . $H/n2n.config
 
+STATUS="`$H/n2n-manage`"
+
 cat <<EOF
 Various settings from: $H/n2n.config
   community: $N2N_COMMUNITY
@@ -13,7 +15,7 @@ Various settings from: $H/n2n.config
   default route snap: $N2N_ROUTE_SNAPSHOT_FILE
 
 Status of the edge node, assuming it's running.
-`$H/n2n-manage | sed 's/^/  /'`
+`$H/n2n-manage| sed 's/^/  /'`
 
 Other status:
 EOF
@@ -22,10 +24,14 @@ if edge_is_running ;
 then echo "  edge process (`edge_pid`) is running" 
 else echo "  edge process is not running"; exit 1 ; fi
 
-echo -n 'gateway ping..'
-if patient_ping_gateway ;
-then echo "  we can ping the gateway" 
-else echo "  we can not ping the gateway" ; exit 1 ; fi
+if [ 'x' == "x$STATUS" ] ; then
+  echo "Edge status indicates it is down, skip trying to ping n2n network gateway"
+else
+  echo -n 'n2n gateway ping..'
+  if patient_ping_gateway ;
+  then echo "  we can ping the gateway" 
+  else echo "  we can not ping the gateway" ; exit 1 ; fi
+fi
 
 echo -n "  default routing for packets is via `default_route`"
 if [ `default_route` == $N2N_GATEWAY ] ;
