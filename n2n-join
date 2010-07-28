@@ -1,6 +1,13 @@
 #!/bin/bash
 . `dirname $0`/n2n.config
 
+int_handler (){
+  echo ERROR: Exiting on interupt
+  edge_is_running && echo WARNING: edge is running
+  exit 1
+}
+trap int_handler INT
+
 if edge_is_running ; then
   if [ "x$1" == 'x-r' ] ; then
     echo 'Killing edge process'
@@ -21,10 +28,10 @@ Password: ' \
 #-m $N2N_FAKE_MAC
 fi
 
-echo -n waiting
+echo -n waiting for ping
 for i in a b c d e f ; do
   ping_gateway && break
-  sleep 1
+  sleep 2
   echo -n '.'
 done
 
